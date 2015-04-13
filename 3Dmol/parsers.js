@@ -596,13 +596,15 @@ $3Dmol.Parsers = (function() {
 
         for (var i = 0; i < mmCIF._struct_conn.id.length; i++) {
             var offset = atoms.length;
+            var id1 = atomHashTable[mmCIF._struct_conn.ptnr1_label_atom_id[i]]; //quick fix
             /*var id1 = atomHashTable[mmCIF._struct_conn.ptnr1_label_alt_id[i]] //NOT ALL FILES HAVE THESE
                             //[mmCIF._struct_conn.ptnr1_label_asym_id[i]]
                             //[mmCIF._struct_conn.ptnr1_label_atom_id[i]]
                             //[mmCIF._struct_conn.ptnr1_label_seq_id[i]];*/
             if (atomsPreBonds[id1] === undefined) continue;
             var index1 = atomsPreBonds[id1].index;
-
+            
+            var id2 = atomHashTable[mmCIF._struct_conn.ptnr2_label_atom_id[i]]; //quick fix
             /*var id2 = atomHashTable[mmCIF._struct_conn.ptnr2_label_alt_id[i]] //same
                                //[mmCIF._struct_conn.ptnr2_label_asym_id[i]]
                                //[mmCIF._struct_conn.ptnr2_label_atom_id[i]]
@@ -693,10 +695,12 @@ $3Dmol.Parsers = (function() {
             for (t = 0; t < atoms.length; t++) {
                 var symmetries = [];
                 for (l = 0; l < copyMatrices.length; l++) {
-                    var newXYZ = new $3Dmol.Vector3();
-                    newXYZ.set(atoms[t].x, atoms[t].y, atoms[t].x);
-                    newXYZ.applyMatrix4(copyMatrices[l]);
-                    symmetries.push(newXYZ);
+                    if (!copyMatrices[l].isEqual(idMatrix)) {
+                        var newXYZ = new $3Dmol.Vector3();
+                        newXYZ.set(atoms[t].x, atoms[t].y, atoms[t].z);
+                        newXYZ.applyMatrix4(copyMatrices[l]);
+                        symmetries.push(newXYZ);
+                    }
                 }
                 atoms[t].symmetries = symmetries;
             }
@@ -1070,10 +1074,12 @@ $3Dmol.Parsers = (function() {
             for (t = 0; t < atoms.length; t++) {
                 var symmetries = [];
                 for (l = 0; l < copyMatrices.length; l++) {
-                    var newXYZ = new $3Dmol.Vector3();
-                    newXYZ.set(atoms[t].x, atoms[t].y, atoms[t].x);
-                    newXYZ.applyMatrix4(copyMatrices[l]);
-                    symmetries.push(newXYZ);
+                    if (!copyMatrices[l].isEqual(idMatrix)) {
+                        var newXYZ = new $3Dmol.Vector3();
+                        newXYZ.set(atoms[t].x, atoms[t].y, atoms[t].z);
+                        newXYZ.applyMatrix4(copyMatrices[l]);
+                        symmetries.push(newXYZ);
+                    }
                 }
                 atoms[t].symmetries = symmetries;
             }

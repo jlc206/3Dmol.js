@@ -248,11 +248,18 @@ $3Dmol.getExtent = function(atomlist) {
         ysum += atom.y;
         zsum += atom.z;
         
+        xmin = (xmin < atom.x) ? xmin : atom.x;
+        ymin = (ymin < atom.y) ? ymin : atom.y;
+        zmin = (zmin < atom.z) ? zmin : atom.z;
+        xmax = (xmax > atom.x) ? xmax : atom.x;
+        ymax = (ymax > atom.y) ? ymax : atom.y;
+        zmax = (zmax > atom.z) ? zmax : atom.z;
+        
         if (atom.symmetries) {
             for (var n = 0; n < atom.symmetries.length; n++) {
                 xsum += atom.symmetries[n].x;
                 ysum += atom.symmetries[n].y;
-                zsum += atom.symmetries[n].x;
+                zsum += atom.symmetries[n].z;
                 cnt++;
                 xmin = (xmin < atom.x) ? xmin : atom.x;
                 ymin = (ymin < atom.y) ? ymin : atom.y;
@@ -263,12 +270,6 @@ $3Dmol.getExtent = function(atomlist) {
             }
         }
 
-        xmin = (xmin < atom.x) ? xmin : atom.x;
-        ymin = (ymin < atom.y) ? ymin : atom.y;
-        zmin = (zmin < atom.z) ? zmin : atom.z;
-        xmax = (xmax > atom.x) ? xmax : atom.x;
-        ymax = (ymax > atom.y) ? ymax : atom.y;
-        zmax = (zmax > atom.z) ? zmax : atom.z;
     }
 
     return [ [ xmin, ymin, zmin ], [ xmax, ymax, zmax ],

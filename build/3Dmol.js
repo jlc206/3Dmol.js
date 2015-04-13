@@ -15429,11 +15429,18 @@ $3Dmol.getExtent = function(atomlist) {
         ysum += atom.y;
         zsum += atom.z;
         
+        xmin = (xmin < atom.x) ? xmin : atom.x;
+        ymin = (ymin < atom.y) ? ymin : atom.y;
+        zmin = (zmin < atom.z) ? zmin : atom.z;
+        xmax = (xmax > atom.x) ? xmax : atom.x;
+        ymax = (ymax > atom.y) ? ymax : atom.y;
+        zmax = (zmax > atom.z) ? zmax : atom.z;
+        
         if (atom.symmetries) {
             for (var n = 0; n < atom.symmetries.length; n++) {
                 xsum += atom.symmetries[n].x;
                 ysum += atom.symmetries[n].y;
-                zsum += atom.symmetries[n].x;
+                zsum += atom.symmetries[n].z;
                 cnt++;
                 xmin = (xmin < atom.x) ? xmin : atom.x;
                 ymin = (ymin < atom.y) ? ymin : atom.y;
@@ -15444,12 +15451,6 @@ $3Dmol.getExtent = function(atomlist) {
             }
         }
 
-        xmin = (xmin < atom.x) ? xmin : atom.x;
-        ymin = (ymin < atom.y) ? ymin : atom.y;
-        zmin = (zmin < atom.z) ? zmin : atom.z;
-        xmax = (xmax > atom.x) ? xmax : atom.x;
-        ymax = (ymax > atom.y) ? ymax : atom.y;
-        zmax = (zmax > atom.z) ? zmax : atom.z;
     }
 
     return [ [ xmin, ymin, zmin ], [ xmax, ymax, zmax ],
@@ -17176,11 +17177,18 @@ $3Dmol.getExtent = function(atomlist) {
         ysum += atom.y;
         zsum += atom.z;
         
+        xmin = (xmin < atom.x) ? xmin : atom.x;
+        ymin = (ymin < atom.y) ? ymin : atom.y;
+        zmin = (zmin < atom.z) ? zmin : atom.z;
+        xmax = (xmax > atom.x) ? xmax : atom.x;
+        ymax = (ymax > atom.y) ? ymax : atom.y;
+        zmax = (zmax > atom.z) ? zmax : atom.z;
+        
         if (atom.symmetries) {
             for (var n = 0; n < atom.symmetries.length; n++) {
                 xsum += atom.symmetries[n].x;
                 ysum += atom.symmetries[n].y;
-                zsum += atom.symmetries[n].x;
+                zsum += atom.symmetries[n].z;
                 cnt++;
                 xmin = (xmin < atom.x) ? xmin : atom.x;
                 ymin = (ymin < atom.y) ? ymin : atom.y;
@@ -17191,12 +17199,6 @@ $3Dmol.getExtent = function(atomlist) {
             }
         }
 
-        xmin = (xmin < atom.x) ? xmin : atom.x;
-        ymin = (ymin < atom.y) ? ymin : atom.y;
-        zmin = (zmin < atom.z) ? zmin : atom.z;
-        xmax = (xmax > atom.x) ? xmax : atom.x;
-        ymax = (ymax > atom.y) ? ymax : atom.y;
-        zmax = (zmax > atom.z) ? zmax : atom.z;
     }
 
     return [ [ xmin, ymin, zmin ], [ xmax, ymax, zmax ],
@@ -24445,17 +24447,17 @@ $3Dmol.Parsers = (function() {
         for (var i = 0; i < mmCIF._atom_site.id.length; i++) {
             var label_alt = mmCIF._atom_site.label_alt_id[i];
             var label_asym = mmCIF._atom_site.label_asym_id[i];
-        var label_atom = mmCIF._atom_site.label_atom_id[i];
-        var label_seq = mmCIF._atom_site.label_seq_id[i];
+            var label_atom = mmCIF._atom_site.label_atom_id[i];
+            var label_seq = mmCIF._atom_site.label_seq_id[i];
             var id = mmCIF._atom_site.id[i]; //If file is sorted, id will be i+1
 
             if (atomHashTable[label_alt] === undefined) {
                 atomHashTable[label_alt] = {};
             }
-        if (atomHashTable[label_alt][label_asym] === undefined) {
-        atomHashTable[label_alt][label_asym] = {};
-        }
-        if (atomHashTable[label_alt][label_asym][label_atom] === undefined) {
+            if (atomHashTable[label_alt][label_asym] === undefined) {
+                atomHashTable[label_alt][label_asym] = {};
+            }
+            if (atomHashTable[label_alt][label_asym][label_atom] === undefined) {
                 atomHashTable[label_alt][label_asym][label_atom] = {};
             }
         
@@ -24463,28 +24465,28 @@ $3Dmol.Parsers = (function() {
         }
 
         for (var i = 0; i < mmCIF._struct_conn.id.length; i++) {
-        var offset = atoms.length;
-            //var id1 = atomHashTable[mmCIF._struct_conn.ptnr1_label_alt_id[i]] //NOT ALL FILES HAVE THESE
-            var id1 = atomHashTable[mmCIF._struct_conn.ptnr1_label_comp_id[i]] //added
-                           //[mmCIF._struct_conn.ptnr1_label_asym_id[i]]
-                           //[mmCIF._struct_conn.ptnr1_label_atom_id[i]]
-                               //[mmCIF._struct_conn.ptnr1_label_seq_id[i]];
+            var offset = atoms.length;
+            var id1 = atomHashTable[mmCIF._struct_conn.ptnr1_label_atom_id[i]]; //quick fix
+            /*var id1 = atomHashTable[mmCIF._struct_conn.ptnr1_label_alt_id[i]] //NOT ALL FILES HAVE THESE
+                            //[mmCIF._struct_conn.ptnr1_label_asym_id[i]]
+                            //[mmCIF._struct_conn.ptnr1_label_atom_id[i]]
+                            //[mmCIF._struct_conn.ptnr1_label_seq_id[i]];*/
             if (atomsPreBonds[id1] === undefined) continue;
             var index1 = atomsPreBonds[id1].index;
-
-        //var id2 = atomHashTable[mmCIF._struct_conn.ptnr2_label_alt_id[i]] //same
-        var id2 = atomHashTable[mmCIF._struct_conn.ptnr1_label_comp_id[i]] //added
+            
+            var id2 = atomHashTable[mmCIF._struct_conn.ptnr2_label_atom_id[i]]; //quick fix
+            /*var id2 = atomHashTable[mmCIF._struct_conn.ptnr2_label_alt_id[i]] //same
                                //[mmCIF._struct_conn.ptnr2_label_asym_id[i]]
                                //[mmCIF._struct_conn.ptnr2_label_atom_id[i]]
-                               //[mmCIF._struct_conn.ptnr2_label_seq_id[i]];
+                               //[mmCIF._struct_conn.ptnr2_label_seq_id[i]];*/
             if (atomsPreBonds[id2] === undefined) continue;
             var index2 = atomsPreBonds[id2].index;
 
-        atomsPreBonds[id1].bonds.push(index2 + offset);
-        atomsPreBonds[id1].bondOrder.push(1);
-        atomsPreBonds[id2].bonds.push(index1 + offset);
-        atomsPreBonds[id2].bondOrder.push(1);
-        console.log("connected " + index1 + " and " + index2);
+            atomsPreBonds[id1].bonds.push(index2 + offset);
+            atomsPreBonds[id1].bondOrder.push(1);
+            atomsPreBonds[id2].bonds.push(index1 + offset);
+            atomsPreBonds[id2].bondOrder.push(1);
+            console.log("connected " + index1 + " and " + index2);
         }
 
         //atoms = atoms.concat(atomsPreBonds);
@@ -24493,7 +24495,7 @@ $3Dmol.Parsers = (function() {
                 atoms.push(atomsIndexed[i]);
         }
 
-            assignBonds(atoms);
+        assignBonds(atoms);
     
         for (var i = 0; i < mmCIF._pdbx_struct_oper_list['id'].length; i++) {
             var matrix = new $3Dmol.Matrix4(
@@ -24563,10 +24565,12 @@ $3Dmol.Parsers = (function() {
             for (t = 0; t < atoms.length; t++) {
                 var symmetries = [];
                 for (l = 0; l < copyMatrices.length; l++) {
-                    var newXYZ = new $3Dmol.Vector3();
-                    newXYZ.set(atoms[t].x, atoms[t].y, atoms[t].x);
-                    newXYZ.applyMatrix4(copyMatrices[l]);
-                    symmetries.push(newXYZ);
+                    if (!copyMatrices[l].isEqual(idMatrix)) {
+                        var newXYZ = new $3Dmol.Vector3();
+                        newXYZ.set(atoms[t].x, atoms[t].y, atoms[t].z);
+                        newXYZ.applyMatrix4(copyMatrices[l]);
+                        symmetries.push(newXYZ);
+                    }
                 }
                 atoms[t].symmetries = symmetries;
             }
@@ -24940,10 +24944,12 @@ $3Dmol.Parsers = (function() {
             for (t = 0; t < atoms.length; t++) {
                 var symmetries = [];
                 for (l = 0; l < copyMatrices.length; l++) {
-                    var newXYZ = new $3Dmol.Vector3();
-                    newXYZ.set(atoms[t].x, atoms[t].y, atoms[t].x);
-                    newXYZ.applyMatrix4(copyMatrices[l]);
-                    symmetries.push(newXYZ);
+                    if (!copyMatrices[l].isEqual(idMatrix)) {
+                        var newXYZ = new $3Dmol.Vector3();
+                        newXYZ.set(atoms[t].x, atoms[t].y, atoms[t].z);
+                        newXYZ.applyMatrix4(copyMatrices[l]);
+                        symmetries.push(newXYZ);
+                    }
                 }
                 atoms[t].symmetries = symmetries;
             }
